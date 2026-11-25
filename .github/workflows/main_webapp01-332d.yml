@@ -43,23 +43,13 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     needs: build
-    permissions:
-      id-token: write #This is required for requesting the JWT
-      contents: read #This is required for actions/checkout
-
+    
     steps:
       - name: Download artifact from build job
         uses: actions/download-artifact@v4
         with:
           name: php-app
       
-      - name: Login to Azure
-        uses: azure/login@v2
-        with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_4E401EE22A3F4A4794931A5A2A8E149E }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_779B91A196AF41BB8B6471E2B2813351 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_EDD98734769D4A1D89D39123D3EF2A20 }}
-
       - name: 'Deploy to Azure Web App'
         uses: azure/webapps-deploy@v3
         id: deploy-to-webapp
@@ -67,4 +57,4 @@ jobs:
           app-name: 'webapp01-332D'
           slot-name: 'Production'
           package: .
-          
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_E5E1DB7D2EBC46D3A3A5EB4186325254 }}
